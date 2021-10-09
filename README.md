@@ -9,6 +9,7 @@ College: Vellore Institute Of Technology
 Round 1 Task  
 Database: MongoDB (Atlas Cloud Platform).  
 Backend: Go  
+> Password hashing has been implemented using `bcrypt`
 
 ## How-To
 
