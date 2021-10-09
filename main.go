@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"crypto/rand"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -14,6 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
+	"golang.org/x/crypto/scrypt"
 )
 
 type User struct {
@@ -30,6 +33,11 @@ type Post struct {
 	Timestamp time.Time          `json:"timestamp,omitempty" bson:"timestamp,omitempty"`
 	UserId    primitive.ObjectID `json:"_userid,omitempty" bson:"_userid,omitempty"`
 }
+
+const (
+	PW_SALT_BYTES = 32
+	PW_HASH_BYTES = 64
+)
 
 var client *mongo.Client
 
@@ -55,6 +63,7 @@ func main() {
 		log.Println("Connection Successful.")
 	}
 
+	fmt.Println(hashPass("password"))
 	handleRequest()
 }
 
@@ -256,4 +265,19 @@ func getPostsOfUser(response http.ResponseWriter, request *http.Request) {
 	}
 	fmt.Printf("Endpoint Hit: Get Posts of UserId %s\n", id)
 	json.NewEncoder(response).Encode(posts)
+}
+
+func hashPass(password string) string {
+	salt := make([]byte, PW_SALT_BYTES)
+	_, err := io.ReadFull(rand.Reader, salt)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	hash, err := scrypt.Key([]byte(password), salt, 1<<14, 8, 1, PW_HASH_BYTES)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return fmt.Sprintf("%x", hash)
 }
