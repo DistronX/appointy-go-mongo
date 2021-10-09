@@ -2,10 +2,8 @@ package main
 
 import (
 	"context"
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -16,7 +14,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
-	"golang.org/x/crypto/scrypt"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -42,7 +40,7 @@ const (
 var client *mongo.Client
 
 func main() {
-	//Configuration
+	// Configuration
 	mongoDbURI := "mongodb+srv://dbUser:appointy@distronx.lz6vr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 	clientOptions := options.Client().ApplyURI(mongoDbURI)
 
@@ -63,7 +61,6 @@ func main() {
 		log.Println("Connection Successful.")
 	}
 
-	fmt.Println(hashPass("password"))
 	handleRequest()
 }
 
@@ -200,6 +197,7 @@ func getAllUsers(response http.ResponseWriter, request *http.Request) {
 		if err != nil {
 			panic(err)
 		}
+		newUser.Password = hashPass(newUser.Password)
 		log.Println(newUser.Id)
 		fmt.Println("Endpoint Hit: User Created")
 		insertUser(newUser)
@@ -268,16 +266,10 @@ func getPostsOfUser(response http.ResponseWriter, request *http.Request) {
 }
 
 func hashPass(password string) string {
-	salt := make([]byte, PW_SALT_BYTES)
-	_, err := io.ReadFull(rand.Reader, salt)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	hash, err := scrypt.Key([]byte(password), salt, 1<<14, 8, 1, PW_HASH_BYTES)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return fmt.Sprintf("%x", hash)
+	return string(hash)
 }

@@ -1,0 +1,14 @@
+{
+    "_id": "6161767d004d04bc30abbde4",
+    "name": "Ambuj",
+    "email": "ambuj@example.com",
+    "password": "ambujPass"
+}
+
+{
+    "_id": "616196e17f1ac0a0bbdc2a9f",
+    "caption": "New Post 1",
+    "imageurl": "sample.com/image.jpeg22",
+    "timestamp": "2021-10-09T13:19:29.977Z",
+    "_userid": "6161767d004d04bc30abbde4"
+}
