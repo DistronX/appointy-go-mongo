@@ -1,8 +1,8 @@
 # appointy-instagram-api
 
-Ambuj Gupta  
-19BCE0366  
-Vellore Institute Of Technology  
+Name: Ambuj Gupta  
+Reg No: 19BCE0366  
+College: Vellore Institute Of Technology  
 
 ## Documentation
 
