@@ -1,3 +1,10 @@
+/*
+An instagram-api using golang and mongodb
+
+Author: Ambuj Gupta
+Reg No: 19BCE0366
+*/
+
 package main
 
 import (
@@ -56,20 +63,21 @@ func main() {
 
 	err = client.Ping(context.Background(), readpref.Primary())
 	if err != nil {
-		log.Fatal("Connection Error: ", err)
+		log.Fatal("Error: ", err)
 	} else {
-		log.Println("Connection Successful.")
+		log.Println("Connected.")
 	}
 
 	handleRequest()
 }
 
+//Handles all the https routes
 func handleRequest() {
 	//root
 	http.HandleFunc("/", root)
 
 	//Posts Requests
-	http.HandleFunc("/posts", getAllPosts)
+	http.HandleFunc("/posts", getPosts)
 	http.HandleFunc("/posts/", getPostById)
 	http.HandleFunc("/posts/users/", getPostsOfUser)
 
@@ -83,16 +91,20 @@ func handleRequest() {
 	}
 }
 
+// Handles the / route
 func root(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Appointy-Instagram-API\n\nAmbuj Gupta\n19BCE0366\nVellore Institute of Technology")
 	fmt.Println("Displaying Root.")
 }
 
-func getAllPosts(response http.ResponseWriter, request *http.Request) {
+// Get all posts if Method=="GET"
+// Create new post of Method=="POST"
+func getPosts(response http.ResponseWriter, request *http.Request) {
 
 	if request.Method == "GET" {
-		response.Header().Set("content-type", "application/json")
 		var posts []Post
+		response.Header().Set("content-type", "application/json")
+
 		collection := client.Database("test").Collection("Post")
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -132,6 +144,7 @@ func getAllPosts(response http.ResponseWriter, request *http.Request) {
 	}
 }
 
+// Helper function that inserts the new post into DB
 func insertPost(post Post) {
 	collection := client.Database("test").Collection("Post")
 	insertResult, err := collection.InsertOne(context.TODO(), post)
@@ -141,6 +154,7 @@ func insertPost(post Post) {
 	fmt.Println("Inserted post with ID:", insertResult.InsertedID)
 }
 
+// Get the Post with post id given in the route /posts/{id}
 func getPostById(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 
@@ -197,13 +211,14 @@ func getAllUsers(response http.ResponseWriter, request *http.Request) {
 		if err != nil {
 			panic(err)
 		}
-		newUser.Password = hashPass(newUser.Password)
+		newUser.Password = hashPass(newUser.Password) //Password Encryption
 		log.Println(newUser.Id)
 		fmt.Println("Endpoint Hit: User Created")
 		insertUser(newUser)
 	}
 }
 
+// Helper function that inserts the new user into DB
 func insertUser(user User) {
 	collection := client.Database("test").Collection("User")
 	insertResult, err := collection.InsertOne(context.TODO(), user)
@@ -213,6 +228,7 @@ func insertUser(user User) {
 	fmt.Println("Created user with ID:", insertResult.InsertedID)
 }
 
+// Get the User with user id given in the route /users/{id}
 func getUserById(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 
@@ -234,6 +250,7 @@ func getUserById(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(user)
 }
 
+// Get all the posts of user with user id mentioned in route /posts/users/{id}
 func getPostsOfUser(response http.ResponseWriter, request *http.Request) {
 	response.Header().Set("content-type", "application/json")
 	id := strings.TrimPrefix(request.URL.Path, "/posts/users/")
@@ -265,6 +282,7 @@ func getPostsOfUser(response http.ResponseWriter, request *http.Request) {
 	json.NewEncoder(response).Encode(posts)
 }
 
+// Password hashing function
 func hashPass(password string) string {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {

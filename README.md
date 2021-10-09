@@ -13,7 +13,7 @@ Backend: Go
 ## How-To
 
 Start local instance by using `go run .` command  
-Local instance starts at `localhost:8082/`  
+Local instance starts at `localhost:8080/`  
 I have used Postman to test the API.
 
 ## Documentation
@@ -27,4 +27,10 @@ I have used Postman to test the API.
 |                   | POST   | Create a new post                           |
 | /posts/{id}       | GET    | Find the post with the given ID             |
 | /posts/users/{id} | GET    | Get all the posts of user with given userID |
+
+## Testing
+### Execution
+(/images/1_vscode.png)
+
+### Create new user
 
