@@ -33,4 +33,20 @@ I have used Postman to test the API.
 ![](/images/1_vscode.png)
 
 ### Create new user
+![](/images/2_new_user.png)
+![](/images/3_new_user.png)
 
+### Get all users
+![](/images/4_get_all_users.png)
+
+### Create new post
+![](/images/5_new_post.png)
+
+### Get all posts
+![](/images/6_get_all_posts.png)
+
+### Create new post
+![](/images/7_new_post.png)
+
+### Getting posts form a particular user
+![](/images/8_posts_from_user.png)
