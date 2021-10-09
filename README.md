@@ -30,7 +30,7 @@ I have used Postman to test the API.
 
 ## Testing
 ### Execution
-(/images/1_vscode.png)
+![](/images/1_vscode.png)
 
 ### Create new user
 
