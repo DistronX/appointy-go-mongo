@@ -28,6 +28,9 @@ I have used Postman to test the API.
 | /posts/{id}       | GET    | Find the post with the given ID             |
 | /posts/users/{id} | GET    | Get all the posts of user with given userID |
 
+## Database MongoDB Atlas
+![](/images/9_DatabaseCollection.png)
+
 ## Testing
 ### Execution
 ![](/images/1_vscode.png)
