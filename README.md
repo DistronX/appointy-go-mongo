@@ -6,9 +6,9 @@ College: Vellore Institute Of Technology
 
 ## Description
 
-Round 1 Task
-Database: MongoDB (Atlas Cloud Platform).
-Backend: Go
+Round 1 Task  
+Database: MongoDB (Atlas Cloud Platform).  
+Backend: Go  
 
 ## Documentation
 
