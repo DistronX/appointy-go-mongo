@@ -10,6 +10,12 @@ Round 1 Task
 Database: MongoDB (Atlas Cloud Platform).  
 Backend: Go  
 
+## How-To
+
+Start local instance by using `go run .` command  
+Local instance starts at `localhost:8082/`  
+I have used Postman to test the API.
+
 ## Documentation
 
 | Route             | Description                                 |
